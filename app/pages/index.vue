@@ -1,51 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { mockData } from '~/data/mockData';
-import { useRequestsStore } from '~/stores/requestsStore';
+import filterRequests from '~/helpers/filterRequests';
+import refreshRequests from '~/helpers/refreshRequests';
 import { type Request } from '~/types/request';
+import { filter_status } from '~/constants/filter_status';
+import { useRequestsStore } from '~/stores/requestsStore';
 
 const searchQuery = ref('');
-const filter_status = ref([{
-  label: 'Todos',
-  value: 'ALL'
-},
-{
-  label: 'Aprovados',
-  value: 'APPROVED'
-},
-{
-  label: 'Pendentes',
-  value: 'PENDING'
-}])
 const statusFilter = ref('ALL')
 const filteredRequests = ref<Request[]>([])
 const useRequests = useRequestsStore()
-
-onMounted(() => {
-  const stored = localStorage.getItem('requests')
-  if (stored) {
-    useRequests.setRequests(JSON.parse(stored) as Request[])
-  } else {
-    localStorage.setItem('requests', JSON.stringify(mockData))
-    useRequests.setRequests(mockData)
-  }
-  filteredRequests.value = useRequests.getRequests
-})
-
-watch([searchQuery, statusFilter], () => {
-  const allRequests = JSON.parse(localStorage.getItem('requests')!) as Request[]
-  let filtered = allRequests.filter(value => {
-    const matchesSearch = value.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    if (statusFilter.value === 'ALL') {
-      return matchesSearch
-    } else {
-      const matchesStatus = value.status === statusFilter.value
-      return matchesSearch && matchesStatus
-    }
-  })
-  useRequests.setRequests(filtered);
-})
-
+function getReq (): Request[] {
+  return useRequests.getRequests
+}
+onMounted(() => refreshRequests(filteredRequests, useRequests.setRequests.bind(useRequests), getReq))
+watch([searchQuery, statusFilter], () => filterRequests(searchQuery, statusFilter, useRequests.setRequests.bind(useRequests)))
 </script>
 
 <template>
