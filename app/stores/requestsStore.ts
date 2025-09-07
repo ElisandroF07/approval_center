@@ -10,6 +10,9 @@ export const useRequestsStore = defineStore('requests', {
         setRequests(reqs: Request[]) {
             this.requests = reqs
         },
+        setRequestsChecked(reqs: Request[]) {
+            this.requests_checked = reqs
+        },
         appendRequest (req: Request) {
             this.requests_checked.push(req)
             console.log(this.requests_checked)

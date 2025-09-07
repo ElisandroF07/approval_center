@@ -11,9 +11,15 @@ const statusFilter = ref('ALL')
 const open = ref(false)
 const filteredRequests = ref<Request[]>([])
 const useRequests = useRequestsStore()
+
 function getReq(): Request[] {
   return useRequests.getRequests
 }
+
+function openModal() {
+  open.value = true;
+}
+
 onMounted(() => refreshRequests(filteredRequests, useRequests.setRequests.bind(useRequests), getReq))
 watch([searchQuery, statusFilter], () => filterRequests(searchQuery, statusFilter, useRequests.setRequests.bind(useRequests)))
 
@@ -31,11 +37,6 @@ function approveAll(): void {
   useRequests.clearRequestsChecked();
   open.value = false;
 }
-
-function openModal() {
-  open.value = true;
-}
-
 </script>
 
 <template>
@@ -49,12 +50,7 @@ function openModal() {
         <UAvatar src="https://avatars.githubusercontent.com/u/100567537?v=4" size="3xl" />
       </div>
     </UContainer>
-    <UContainer class="h-[160px] flex-[1] grid grid-cols-4 max-w-[1440px] gap-x-4">
-      <Ucard variant="subtle" class="flex-[1] bg-blue-100 rounded-[16px]" v-for="i in 4" :key="i">
-
-      </Ucard>
-    </UContainer>
-    <UContainer class="max-w-[1440px] pt-8 pb-5 flex items-center justify-between">
+    <UContainer class="max-w-[1440px] pt-6 pb-5 flex items-center justify-between">
       <div class="flex items-center gap-x-3">
         <div
           class="flex items-center gap-x-4 bg-zinc-50 w-[300px] h-[50px] px-4 rounded-[12px] text-gray-500 border border-zinc-200">
@@ -76,7 +72,7 @@ function openModal() {
 
       </div>
       <div>
-        <UButton label="Aprovar todos" @click="openModal"
+        <UButton label="Aprovar todos" @click="openModal" :disabled="useRequests.getRequestsChecked.length === 0"
           class="text-white bg-[#0F8371] hover:bg-[#0c5e50] disabled:bg-zinc-100 disabled:text-gray-400 transition-colors duration-300 h-[50px] px-6 rounded-[12px]" />
       </div>
     </UContainer>

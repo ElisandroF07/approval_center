@@ -12,8 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <UModal v-bind:open="open" v-on:close="$emit('close')" class="h-[400px] rounded-[12px] p-4">
-    <UButton label="Open" color="neutral" variant="subtle" />
+  <UModal v-bind:open="open" v-on:close="$emit('close')" class=" rounded-[12px] p-4">
     <template #content class="p-6 mt-8">
         <h1 class="px-4 font-bold text-xl mt-5">Confirmação de Aprovação</h1>
         <p class="px-4 py-2 text-md ">Tem certeza que deseja aprovar todas as solicitações selecionadas?</p>

@@ -20,14 +20,21 @@ const columns: TableColumn<Request>[] = [
         header: ({ table }) =>
             h(UCheckbox, {
                 modelValue: table.getIsSomePageRowsSelected() ? 'indeterminate' : table.getIsAllPageRowsSelected(),
-                'onUpdate:modelValue': (value: boolean) =>
+                'onUpdate:modelValue': (value: boolean) => {
                     table.toggleAllPageRowsSelected(!!value)
+                    if (!!value) {
+                        useRequests.setRequestsChecked([...useRequests.getRequests.filter((request: Request) => request.status !== 'APPROVED')])
+                    } else {
+                        useRequests.clearRequestsChecked()
+                    }
+
+                }
+
             }),
         cell: ({ row }) =>
             h(UCheckbox, {
                 modelValue: row.getIsSelected(),
                 disabled: row.original.status === 'APPROVED',
-                class: 'disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100',
                 'onUpdate:modelValue': (value: boolean) => {
                     row.toggleSelected(!!value)
                     if (!!value) {
@@ -90,8 +97,8 @@ const columns: TableColumn<Request>[] = [
 </script>
 
 <template>
-    <UTable :data="useRequests.getRequests" :columns="columns"
-        class="flex-1 border-separate rounded-[12px] border border-gray-200 border-spacing-0" :ui="{
+    <UTable :data="useRequests.getRequests.slice(page * 10 - 10, page * 10)" :items-per-page="10" defalt-page="1"
+        :columns="columns" class="flex-1 border-separate rounded-[12px] border border-gray-200 border-spacing-0" :ui="{
             th: 'text-xs font-bold uppercase text-gray-900 tracking-wide bg-gray-50',
             td: 'text-xs font-regular uppercase text-gray-600 tracking-wide bg-white',
             separator: 'bg-gray-200',
@@ -100,18 +107,9 @@ const columns: TableColumn<Request>[] = [
         }" />
     <div class="px-4 py-3.5 text-sm text-muted flex items-center justify-between">
         <div>
-            {{ useRequests.getRequests.length }} linhas.
+            {{ useRequests.getRequestsChecked.length }} linhas.
         </div>
-        <UPagination v-model:page="page" active-color="primary" active-variant="subtle"
-            :total="useRequests.getRequests.length" :page-size="10" :ui="{
-                item: 'rounded-[10px] bg-zinc-50 border border-gray-200 text-gray-500',
-                active: 'bg-[#3c4f62] text-white border border-gray-200',
-                disabled: 'bg-zinc-100 text-gray-400 border border-gray-200 cursor-not-allowed',
-                ellipsis: 'bg-zinc-100 text-gray-400 border border-gray-200 cursor-not-allowed',
-                next: 'rounded-[10px] bg-zinc-50 border border-gray-200 text-gray-500',
-                prev: 'rounded-[10px] bg-zinc-50 border border-gray-200 text-gray-500',
-                fist: 'rounded-[10px] bg-zinc-50 border border-gray-200 text-gray-500',
-                last: 'rounded-[10px] bg-zinc-50 border border-gray-200 text-gray-500'
-            }" />
+        <UPagination v-model:page="page" :total="useRequests.getRequests.length" color="neutral"
+            activeColor="primary" />
     </div>
 </template>
