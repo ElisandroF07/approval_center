@@ -7,6 +7,5 @@ export default function approveRequest(id: string, setRequests: (reqs: Request[]
         (requests[index] as Request).status = 'APPROVED'
         localStorage.setItem('requests', JSON.stringify(requests))
         setRequests(requests)
-        alert('Requisição aprovada com sucesso!')
     }
 }

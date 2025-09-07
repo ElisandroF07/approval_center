@@ -22,14 +22,15 @@ const linkClass = (to: string) => {
 </script>
 
 <template>
-  <nav class="w-60 min-h-full">
+  <nav class="hidden w-60 md:block min-h-full transition-all duration-300">
     <div>
       <img src="/logo.png" alt="Logo" class="w-40" />
     </div>
 
     <ul class="mt-14 flex flex-col gap-2">
       <li v-for="item in navItems" :key="item.to">
-        <ULink :to="item.to" :class="linkClass(item.to) + 'transition-colors rounded-[12px] w-full duration-300 font-medium p-4 flex items-center justify-start gap-x-2'" >
+        <ULink :to="item.to"
+          :class="linkClass(item.to) + 'transition-colors rounded-[12px] w-full duration-300 font-medium p-4 flex items-center justify-start gap-x-2'">
           <span :class="linkClass(item.to)" v-html="item.icon"></span>
           <span :class="linkClass(item.to)">{{ item.label }}</span>
         </ULink>

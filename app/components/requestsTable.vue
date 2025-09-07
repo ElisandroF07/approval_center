@@ -105,7 +105,7 @@ const columns: TableColumn<Request>[] = [
             tbody: 'divide-y divide-gray-200 divide-dashed',
             thead: ' divide-gray-400'
         }" />
-    <div class="px-4 py-3.5 text-sm text-muted flex items-center justify-between">
+    <div class="px-4 py-3.5 text-sm text-muted gap-y-3 sm:gap-y-0 flex flex-col sm:flex-row items-center justify-between">
         <div>
             {{ useRequests.getRequestsChecked.length }} linhas.
         </div>

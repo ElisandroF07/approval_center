@@ -16,18 +16,3 @@
   --color-green-900: #0a5331;
   --color-green-950: #052e16;
 }
-
-:webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-thumb{
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-track{
-  background-color: transparent;
-}
-::-webkit-scrollbar-corner{
-  background-color: transparent;
-}
