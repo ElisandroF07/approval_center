@@ -1,75 +1,37 @@
-# Nuxt UI Starter
 
-Look at [Nuxt docs](https://nuxt.com/docs/getting-started/introduction) and [Nuxt UI docs](https://ui.nuxt.com) to learn more.
+# Approval Center
 
-## Setup
+Projeto de Central de Aprovações utilizando Nuxt 3 e Nuxt UI.
 
-Make sure to install the dependencies:
+## Link do repositório
 
-```bash
-# npm
-npm install
+https://github.com/ElisandroF07/approval_center
 
-# pnpm
-pnpm install
+## Instruções para rodar o projeto
 
-# yarn
-yarn install
+1. Clone o repositório:
+	```bash
+	git clone https://github.com/ElisandroF07/approval_center.git
+	```
+2. Instale as dependências:
+	```bash
+	npm install
+	```
+3. Inicie o projeto:
+	```bash
+	npm run dev
+	```
 
-# bun
-bun install
+## Decisões técnicas e pontos relevantes
+
+- Gerenciamento de estado centralizado com Pinia (`useRequestsStore`), facilitando o controle das requisições e seleção de linhas.
+- Paginação na tabela para maior controle sobre os dados exibidos.
+- Componentização: os elementos visuais principais (tabela, sidebar, botões) foram criados como componentes Vue reutilizáveis.
+- O status das requisições é persistido no `localStorage` e as stores pinia são atualizadas automaticamente para garantir que as aprovações não se percam ao recarregar a página.
+- O layout foi pensado para ser responsivo e manter a barra de rolagem apenas na área da tabela, mantendo o cabeçalho e filtros fixos.
+- Design simples e intuitivo, visando proporcionar ao utilizador, uma experiência cômoda e intuitiva.
+- Lógica de atualização em massa simples e funcional, atendendo ao solicitado no enunciado.
+
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Veja a [documentação de deploy](https://nuxt.com/docs/getting-started/deployment) para mais informações.
