@@ -19,18 +19,23 @@ const columns: TableColumn<Request>[] = [
         id: 'select',
         header: ({ table }) =>
             h(UCheckbox, {
-                modelValue: table.getIsSomePageRowsSelected()
-                    ? 'indeterminate'
-                    : table.getIsAllPageRowsSelected(),
-                'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
-                    table.toggleAllPageRowsSelected(!!value),
-                'aria-label': 'Selecionar todos'
+                modelValue: table.getIsSomePageRowsSelected() ? 'indeterminate' : table.getIsAllPageRowsSelected(),
+                'onUpdate:modelValue': (value: boolean) =>
+                    table.toggleAllPageRowsSelected(!!value)
             }),
         cell: ({ row }) =>
             h(UCheckbox, {
                 modelValue: row.getIsSelected(),
-                'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
-                'aria-label': 'Select row'
+                disabled: row.original.status === 'APPROVED',
+                class: 'disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100',
+                'onUpdate:modelValue': (value: boolean) => {
+                    row.toggleSelected(!!value)
+                    if (!!value) {
+                        useRequests.appendRequest(row.original)
+                    } else {
+                        useRequests.removeRequest(row.original.id)
+                    }
+                }
             })
     },
     {
@@ -64,7 +69,7 @@ const columns: TableColumn<Request>[] = [
                     color: row.original.status === 'APPROVED' ? '#fff' : '#99A1AF',
                     borderColor: row.original.status === 'APPROVED' ? '#00DD83' : '#E4E4E7',
                 }
-            }, () => row.getValue('status'))
+            }, () => row.getValue('status') === "APPROVED" ? 'Aprovado' : 'Pendente')
         }
     },
     {
@@ -73,7 +78,7 @@ const columns: TableColumn<Request>[] = [
         cell: ({ row }) => {
             return h('div', { class: 'flex justify-end' }, [
                 h(UButton, {
-                    label: 'Aprovar',
+                    label: row.original.status === 'APPROVED' ? 'Aprovado' : 'Aprovar',
                     disabled: row.original.status === 'APPROVED',
                     class: 'text-white bg-[#0F8371] hover:bg-[#0c5e50] disabled:bg-zinc-100 disabled:text-gray-400 transition-colors duration-300 h-[35px] px-3 rounded-[12px]',
                     onClick: () => approveRequest(row.original.id, useRequests.setRequests.bind(useRequests))
@@ -85,7 +90,6 @@ const columns: TableColumn<Request>[] = [
 </script>
 
 <template>
-
     <UTable :data="useRequests.getRequests" :columns="columns"
         class="flex-1 border-separate rounded-[12px] border border-gray-200 border-spacing-0" :ui="{
             th: 'text-xs font-bold uppercase text-gray-900 tracking-wide bg-gray-50',

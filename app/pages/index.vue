@@ -8,13 +8,34 @@ import { useRequestsStore } from '~/stores/requestsStore';
 
 const searchQuery = ref('');
 const statusFilter = ref('ALL')
+const open = ref(false)
 const filteredRequests = ref<Request[]>([])
 const useRequests = useRequestsStore()
-function getReq (): Request[] {
+function getReq(): Request[] {
   return useRequests.getRequests
 }
 onMounted(() => refreshRequests(filteredRequests, useRequests.setRequests.bind(useRequests), getReq))
 watch([searchQuery, statusFilter], () => filterRequests(searchQuery, statusFilter, useRequests.setRequests.bind(useRequests)))
+
+function approveAll(): void {
+  const checkedRequests = useRequests.getRequestsChecked;
+  const updatedRequests = useRequests.getRequests.map((request: Request) => {
+    if (checkedRequests.some((checked: Request) => checked.id === request.id)) {
+      return { ...request, status: 'APPROVED' };
+    }
+    return request;
+  });
+  useRequests.setRequests(updatedRequests as Request[]);
+  localStorage.setItem('requests', JSON.stringify(updatedRequests));
+  alert("Todos os pedidos foram aprovados com sucesso!");
+  useRequests.clearRequestsChecked();
+  open.value = false;
+}
+
+function openModal() {
+  open.value = true;
+}
+
 </script>
 
 <template>
@@ -55,7 +76,7 @@ watch([searchQuery, statusFilter], () => filterRequests(searchQuery, statusFilte
 
       </div>
       <div>
-        <UButton label="Aprovar todos"
+        <UButton label="Aprovar todos" @click="openModal"
           class="text-white bg-[#0F8371] hover:bg-[#0c5e50] disabled:bg-zinc-100 disabled:text-gray-400 transition-colors duration-300 h-[50px] px-6 rounded-[12px]" />
       </div>
     </UContainer>
@@ -64,5 +85,6 @@ watch([searchQuery, statusFilter], () => filterRequests(searchQuery, statusFilte
         <RequestsTable />
       </div>
     </UContainer>
+    <ConfirmationModal :open="open" @close="open = false" @approve="approveAll" />
   </div>
 </template>
